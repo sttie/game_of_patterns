@@ -1,4 +1,7 @@
 #include <iostream>
+#include <QApplication>
+#include <SFML/Graphics.hpp>
+#include <memory>
 
 #include "include/graphics/draw.h"
 #include "include/logging/file_logger.hpp"
@@ -6,48 +9,25 @@
 
 
 #include "include/lib/unit_testing.hpp"
-#include "include/tests/snapshot_test.h"
-#include "include/tests/raii_file_test.h"
-#include "include/tests/cell_test.h"
-#include "include/tests/container_test.h"
-#include "include/tests/field_test.h"
-#include "include/tests/commands_test.h"
 
-#include <SFML/Graphics.hpp>
-#include <memory>
 #include "include/controller/field_controller.h"
 #include "include/logging/field_logger.h"
 #include "include/game_objects/behavior_types.hpp"
 #include "include/game_objects/enemy.hpp"
 #include "include/controller/states.h"
-#include <QApplication>
 
-
-void TestAll() {
-    TestRunner tr;
-    RUN_TEST(tr, TestInRFiles);
-    RUN_TEST(tr, TestOutRFiles);
-    RUN_TEST(tr, TestCells);
-    RUN_TEST(tr, TestContainer);
-    RUN_TEST(tr, TestMoves);
-    RUN_TEST(tr, TestField);
-    RUN_TEST(tr, TestSnapshot);
-}
+constexpr int ROWS = 10;
+constexpr int COLUMNS = 10;
+constexpr int SIZE = 80;
 
 
 int main(int argc, char* argv[]) {
-    TestAll();
-
     using namespace std;
     using namespace Lib;
     using namespace Logging;
     using namespace Graphics;
     using namespace GameObject;
     using namespace Model;
-
-    const int ROWS = 10;
-    const int COLUMNS = 10;
-    const int SIZE = 80;
 
     QApplication a(argc, argv);
 

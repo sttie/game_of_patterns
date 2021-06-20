@@ -90,7 +90,7 @@ const Lib::ISerializable& Cell::Read(Lib::InRFile& in) {
         throw Lib::SerializeReadError("cell type int representation is negative or overflowed");
     }
 
-    SetStrategy(static_cast<CellType>(int_type));
+    SetType(static_cast<CellType>(int_type));
     uint8_t has_strategy = Lib::Read<uint8_t>(in);
     if (has_strategy > 1) {
         throw Lib::SerializeReadError("cell's has_strategy flag cannot be more than 1");

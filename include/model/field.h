@@ -24,17 +24,17 @@ namespace Model {
             LEFT
         };
 
-        static Field &GetField(int rows_,
+        static Field& GetField(int rows_,
                                int columns_,
                                int cell_size_);
-        static Field &GetField();
+        static Field& GetField();
         static void ClearField();
 
-        Field(const Field &other_field);
-        Field(Field &&other_field) noexcept;
+        Field(const Field& other_field);
+        Field(Field&& other_field) noexcept;
 
-        Field &operator=(const Field &other_field);
-        Field &operator=(Field &&other_field) noexcept;
+        Field& operator=(const Field& other_field);
+        Field& operator=(Field&& other_field) noexcept;
 
         Lib::Container<Cell> &operator[](int index);
         const Lib::Container<Cell> &operator[](int index) const;
@@ -61,10 +61,10 @@ namespace Model {
 
         void AddListener(Logging::Notifier::ListenerPtr new_listener);
 
-        Lib::Container<Cell> *begin();
-        Lib::Container<Cell> *end();
-        const Lib::Container<Cell> *begin() const;
-        const Lib::Container<Cell> *end() const;
+        Lib::Container<Cell>* begin();
+        Lib::Container<Cell>* end();
+        const Lib::Container<Cell>* begin() const;
+        const Lib::Container<Cell>* end() const;
 
         template<typename Moving, typename Attacking>
         void AddEnemy(std::shared_ptr<

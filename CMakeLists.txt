@@ -38,9 +38,7 @@ add_executable(patterns_game
         src/controller/states.cpp include/controller/states_interface.h
         include/common.h include/snapshots/snapshot.h include/snapshots/field_snapshot.h
         include/graphics/file_dialog.h include/lib/serialize.hpp src/snapshots/field_snapshot.cpp
-        include/lib/type_checkers.h include/tests/snapshot_test.h
-        include/lib/unit_testing.hpp include/tests/field_test.h include/tests/cell_test.h
-        include/tests/raii_file_test.h include/tests/container_test.h include/tests/commands_test.h)
+        include/lib/type_checkers.h)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)

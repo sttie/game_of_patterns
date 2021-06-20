@@ -17,6 +17,9 @@ namespace Model {
             EXIT,
             ENTER,
             EMPTY,
+            LIVES_UP,
+            SCORES_UP,
+            PORTAL,
             COUNT
         };
 
