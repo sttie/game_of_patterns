@@ -16,18 +16,18 @@ Drawer::Drawer(Model::Field& field_ref_,
     , renderer(window)
     , outline_color(outline_color_)
 {
-//    InitSprite(LIVES_IMG_PATH, heart_texture, heart_sprite, 0.085, 0.12);
-//    InitSprite(SCORES_IMG_PATH, score_texture, score_sprite, 0.094, 0.12);
+    InitSprite(LIVES_IMG_PATH, heart_texture, heart_sprite, 0.085, 0.12);
+    InitSprite(SCORES_IMG_PATH, score_texture, score_sprite, 0.094, 0.12);
 }
 
 
-//void Drawer::InitSprite(const std::string& texture_path,
-//                        sf::Texture& texture, sf::Sprite& sprite,
-//                        float xscale, float yscale) {
-//    texture.loadFromFile(texture_path);
-//    sprite.setTexture(texture);
-//    sprite.setScale(xscale, yscale);
-//}
+void Drawer::InitSprite(const std::string& texture_path,
+                        sf::Texture& texture, sf::Sprite& sprite,
+                        float xscale, float yscale) {
+    texture.loadFromFile(texture_path);
+    sprite.setTexture(texture);
+    sprite.setScale(xscale, yscale);
+}
 
 void Drawer::Update() {
     window.clear();
@@ -65,12 +65,10 @@ void Drawer::RenderCell(int x, int y) {
         renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Green);
     }
     else if (field_ref.IsLivesUp(x, y)) {
-//         renderer.DrawSprite(heart_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
-        renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Red);
+        renderer.DrawSprite(heart_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
     }
     else if (field_ref.IsScoresUp(x, y)) {
-//        renderer.DrawSprite(score_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
-        renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Yellow);
+        renderer.DrawSprite(score_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
     }
     else if (field_ref.IsPortal(x, y)) {
         renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Magenta);

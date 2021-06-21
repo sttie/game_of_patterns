@@ -25,19 +25,19 @@ namespace Graphics {
         bool IsOpen() const;
 
     private:
-//        static void InitSprite(const std::string &texture_path,
-//                               sf::Texture &texture, sf::Sprite &sprite,
-//                               float xscale, float yscale);
+        static void InitSprite(const std::string &texture_path,
+                                sf::Texture &texture, sf::Sprite &sprite,
+                                float xscale, float yscale);
 
         Model::Field &field_ref;
         sf::RenderWindow window;
         Renderer renderer;
         sf::Color outline_color;
 
-//        sf::Texture heart_texture;
-//        sf::Texture score_texture;
-//        sf::Sprite heart_sprite;
-//        sf::Sprite score_sprite;
+        sf::Texture heart_texture;
+        sf::Texture score_texture;
+        sf::Sprite heart_sprite;
+        sf::Sprite score_sprite;
     };
 
 }

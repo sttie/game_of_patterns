@@ -55,15 +55,29 @@ void Field::FillField() {
     cells[3][7] = Cell({7, 3}, CellType::OBSTACLE);
 
     cells[0][0].SetStrategy(std::make_shared<ScoresUp>());
-    cells[4][5].SetStrategy(std::make_shared<ScoresUp>());
-    cells[5][5].SetStrategy(std::make_shared<ScoresUp>());
-    cells[8][1].SetStrategy(std::make_shared<ScoresUp>());
+    cells[0][0].SetType(CellType::SCORES_UP);
 
-    cells[1][3].SetStrategy(std::make_shared<ScoresUp>());
-    cells[9][6].SetStrategy(std::make_shared<ScoresUp>());
+    cells[4][5].SetStrategy(std::make_shared<ScoresUp>());
+    cells[4][5].SetType(CellType::SCORES_UP);
+
+    cells[5][5].SetStrategy(std::make_shared<ScoresUp>());
+    cells[5][5].SetType(CellType::SCORES_UP);
+
+    cells[8][1].SetStrategy(std::make_shared<ScoresUp>());
+    cells[8][1].SetType(CellType::SCORES_UP);
+
+
+    cells[1][3].SetStrategy(std::make_shared<LivesUp>());
+    cells[1][3].SetType(CellType::LIVES_UP);
+
+    cells[9][6].SetStrategy(std::make_shared<LivesUp>());
+    cells[9][6].SetType(CellType::LIVES_UP);
 
     cells[9][3].SetStrategy(std::make_shared<Teleport>(6, 1));
+    cells[9][3].SetType(CellType::PORTAL);
+
     cells[6][8].SetStrategy(std::make_shared<Teleport>(0, 1));
+    cells[6][8].SetType(CellType::PORTAL);
 }
 
 Container<Cell>& Field::operator[](int index) {

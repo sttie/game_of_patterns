@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(patterns_game)
+project(game_of_patterns)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -7,11 +7,13 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../)
+
 include_directories(include)
 include_directories(include/graphics)
 include_directories(include/lib)
 
-add_executable(patterns_game
+add_executable(game_of_patterns
         include/graphics/renderer.h
         include/model/cell.h
         include/model/field.h
@@ -45,4 +47,4 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 include_directories(${SFML_INCLUDE_DIR})
 
-target_link_libraries(patterns_game sfml-graphics sfml-window sfml-system Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(game_of_patterns sfml-graphics sfml-window sfml-system Qt${QT_VERSION_MAJOR}::Widgets)
