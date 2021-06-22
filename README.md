@@ -1,6 +1,6 @@
 # Game of Patterns
 
-Why did I name it "Game of Patterns"? Because the main goal I followed was learn a lot of OOP design patterns (see below).
+Why have I named this project "Game of Patterns"? Because the main goal I followed was learning a lot of OOP design patterns (see below).
 It means that that the core value of this project lies in the code.
 
 ## Used patterns
