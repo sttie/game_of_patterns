@@ -1,4 +1,5 @@
-#include "../../include/model/cell.h"
+#include <model/cell.h>
+#include <game_objects/player.h>
 
 #include <utility>
 
@@ -37,10 +38,11 @@ Cell::CellType Cell::Type() const {
     return type;
 }
 
-void Cell::ApplyStrategy(int& x, int& y,
-                         int& scores, int& lives) {
+void Cell::ApplyStrategy(GameObject::Player& player) {
     if (strategy) {
-        strategy->ApplyStrategy(x, y, scores, lives);
+        strategy->ApplyStrategy(player);
+
+        // TODO: сделать вариативность - удалять стратегию или нет
         strategy = nullptr;
         type = CellType::EMPTY;
     }

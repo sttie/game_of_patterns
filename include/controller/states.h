@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "states_interface.h"
-#include "../commands/moves.hpp"
-#include "../model/field.h"
-#include "../graphics/draw.h"
+#include <controller/states_interface.h>
+#include <commands/moves.hpp>
+#include <model/field.h>
+#include <graphics/draw.h>
 
 
 namespace States {

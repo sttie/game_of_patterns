@@ -74,7 +74,7 @@ void Drawer::RenderCell(int x, int y) {
         renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Magenta);
     }
 
-    if (field_ref.IsEnemy(x, y)) {
+    if (field_ref.IsNPC(x, y)) {
         size_t cell_size = field_ref.CellSize();
         sf::CircleShape circle(cell_size / 2 - 10);
         circle.setFillColor(sf::Color::Red);

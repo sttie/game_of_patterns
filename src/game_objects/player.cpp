@@ -1,31 +1,30 @@
-#include "../../include/game_objects/player.h"
+#include <game_objects/player.h>
 
 #include <utility>
 
-
 using namespace GameObject;
 
-Player::Player(int x_, int y_,
-               int scores_, int lives_)
-    : x(x_), y(y_), scores(scores_), lives(lives_)
+
+Player::Player(int x, int y, int scores, int lives)
+    : x(x), y(y), scores(scores), lives(lives)
 {
     if (x < 0 || y < 0 || scores < 0 || lives <= 0)
         throw std::logic_error("Some of parameters are negative");
 }
 
 
-Player& Player::operator+(Model::Cell& cell) {
-    cell.ApplyStrategy(x, y, scores, lives);
-    return *this;
+// Returns true if (lives - lives_damage <= 0)
+bool Player::TakeDamage(int lives_damage) {
+    lives = std::max(lives - lives_damage, 0);
+    return lives == 0;
 }
 
-bool Player::operator==(const Player& other) const {
-    return std::tie(x, y, lives, scores)
-            == std::tie(other.x, other.y, other.lives, other.scores);
+void Player::TakeHeal(int lives_heal) {
+    lives += lives_heal;
 }
 
-bool Player::operator!=(const Player& other) const {
-    return !(*this == other);
+void Player::TakeScores(int scores_amount) {
+    scores += scores_amount;
 }
 
 
@@ -35,6 +34,7 @@ void Player::Write(Lib::OutRFile& out) const {
     Lib::Write(out, scores);
     Lib::Write(out, lives);
 }
+
 const Lib::ISerializable& Player::Read(Lib::InRFile& in) {
     x = Lib::Read<int>(in);
     if (x < 0) {
@@ -77,6 +77,11 @@ void Player::SetX(int x_) {
 }
 
 void Player::SetY(int y_) {
+    y = y_;
+}
+
+void Player::SetPosition(int x_, int y_) {
+    x = x_;
     y = y_;
 }
 

@@ -1,31 +1,33 @@
 #pragma once
 
 #include <memory>
-
-#include "../model/cell.h"
-#include "buffs.h"
-#include "../lib/serialize.hpp"
+#include <game_objects/buffs.h>
+#include <lib/serialize.hpp>
 
 
 namespace GameObject {
 
     class Player : public Lib::ISerializable {
     public:
-        explicit Player(int x_ = 0, int y_ = 0,
-                        int scores_ = 0, int lives_ = 3);
-
-        Player &operator+(Model::Cell &cell);
-        bool operator==(const Player& other) const;
-        bool operator!=(const Player& other) const;
+        explicit Player(int x = 0, int y = 0,
+                        int scores = 0, int lives = 3);
 
         void Write(Lib::OutRFile& out) const override;
         const ISerializable& Read(Lib::InRFile& in) override;
 
+        // Returns true if (lives - lives_damage <= 0)
+        bool TakeDamage(int lives_damage);
+        void TakeHeal(int lives_heal);
+        void TakeScores(int scores_amount);
+
         void UpdateBuffs();
         void SetLives(int lives_);
         void SetScores(int scores_);
+
         void SetX(int x_);
         void SetY(int y_);
+        void SetPosition(int x_, int y_);
+
         void SetBuff(std::shared_ptr<Buff> buff_);
 
         int X() const;

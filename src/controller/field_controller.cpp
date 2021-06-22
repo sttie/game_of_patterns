@@ -1,4 +1,4 @@
-#include "../../include/controller/field_controller.h"
+#include <controller/field_controller.h>
 
 using namespace Controller;
 

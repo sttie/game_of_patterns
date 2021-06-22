@@ -1,10 +1,9 @@
-#include "../../include/model/field.h"
+#include <model/field.h>
 
 #include <stdexcept>
 #include <algorithm>
 
 using namespace std;
-using namespace Lib;
 using namespace Logging;
 using namespace Model;
 
@@ -19,12 +18,13 @@ Field::Field(int rows_, int columns_, int cell_size_) {
     cell_size = cell_size_;
     player = GameObject::Player();
 
-    cells.Reserve(rows);
-    for (Container<Cell>& cells_row : cells) {
-        cells_row.Reserve(columns);
+    cells.resize(rows);
+    for (std::vector<Cell>& cells_row : cells) {
+        cells_row.resize(columns);
     }
 
     // Устанавливаем фиксированные "особые" точки
+    // TODO: реализовать процедурную генерацию карты
     FillField();
 }
 
@@ -80,25 +80,19 @@ void Field::FillField() {
     cells[6][8].SetType(CellType::PORTAL);
 }
 
-Container<Cell>& Field::operator[](int index) {
+std::vector<Cell>& Field::operator[](int index) {
     return cells[index];
 }
 
-const Container<Cell>& Field::operator[](int index) const {
+const std::vector<Cell>& Field::operator[](int index) const {
     return cells[index];
 }
 
 
-bool Field::IsEnemy(int x, int y) const {
-    for (const auto& enemy_ptr : enemies) {
-        if (x == enemy_ptr->X() && y == enemy_ptr->Y())
-            return true;
-    }
-    return false;
-
-//    return !any_of(enemies.begin(), enemies.end(), [x, y](const auto& enemy_ptr){
-//        return enemy_ptr->X() != x && enemy_ptr->Y() != y;
-//    });
+bool Field::IsNPC(int x, int y) const {
+   return !none_of(npcs.begin(), npcs.end(), [x, y](const auto& npc_ptr){
+       return npc_ptr->X() == x && npc_ptr->Y() == y;
+   });
 }
 
 bool Field::IsEnter(int x, int y) const {
@@ -128,7 +122,6 @@ bool Field::IsPortal(int x, int y) const {
 bool Field::IsEmpty(int x, int y) const {
     return cells[y][x].Type() == Cell::CellType::EMPTY;
 }
-
 
 
 int Field::Rows() const {
@@ -165,9 +158,8 @@ int Field::PlayerScores() const {
     return player.Scores();
 }
 
-void Field::MovePlayer(Move direction) {
-    int x = PlayerX(),
-        y = PlayerY();
+void Field::MovePlayer(const Move& direction) {
+    int x = PlayerX(), y = PlayerY();
 
     if (direction == Move::UP && y > 0 && !IsObstacle(x, y-1))
         player.SetY(--y);
@@ -178,19 +170,27 @@ void Field::MovePlayer(Move direction) {
     else if (direction == Move::LEFT && x > 0 && !IsObstacle(x-1, y))
         player.SetX(--x);
 
-    // Взаимодействие с новой клеткой
-    player + cells[y][x];
+    cells[y][x].ApplyStrategy(player);
+
     // TODO: может перенести апдейт в контроллер? или дровер?
-    player.UpdateBuffs();
+    // player.UpdateBuffs();
 
     notifier.Notify();
 }
 
+void Field::AddNPC(std::shared_ptr<GameObject::NPC> npc) {
+    npcs.push_back(std::move(npc));
+}
+
 void Field::UpdateEnemies() {
-    for (const auto& enemy_ptr : enemies) {
-        enemy_ptr->Move();
-        if (enemy_ptr->X() == player.X() && enemy_ptr->Y() == player.Y()) {
-            (*enemy_ptr) + player;
+    for (const auto& npc : npcs) {
+        auto new_npc_position = npc->Move();
+        while (new_npc_position.IsOutOfBounds(columns, rows) || IsObstacle(new_npc_position.x, new_npc_position.y))
+            new_npc_position = npc->Move();
+        npc->SetPosition(new_npc_position);
+        
+        if (npc->X() == player.X() && npc->Y() == player.Y()) {
+            npc->InteractWithPlayer(player);
         }
     }
 }
@@ -224,13 +224,6 @@ void Field::ClearField() {
 }
 
 
-Field::Field(const Field& other_field) {
-    rows = other_field.rows;
-    columns = other_field.columns;
-    cell_size = other_field.cell_size;
-    cells = other_field.cells;
-}
-
 Field::Field(Field&& other_field) noexcept {
     rows = other_field.rows;
     columns = other_field.columns;
@@ -238,15 +231,6 @@ Field::Field(Field&& other_field) noexcept {
     cells = move(other_field.cells);
 }
 
-
-Field& Field::operator=(const Field& other_field) {
-    rows = other_field.rows;
-    columns = other_field.columns;
-    cell_size = other_field.cell_size;
-    cells = other_field.cells;
-
-    return *this;
-}
 
 Field& Field::operator=(Field&& other_field) noexcept {
     rows = other_field.rows;
@@ -258,19 +242,19 @@ Field& Field::operator=(Field&& other_field) noexcept {
 }
 
 
-Container<Cell>* Field::begin() {
+auto Field::begin() {
     return cells.begin();
 }
 
-Container<Cell>* Field::end() {
+auto Field::end() {
     return cells.end();
 }
 
-const Container<Cell>* Field::begin() const {
+const auto Field::begin() const {
     return cells.begin();
 }
 
-const Container<Cell>* Field::end() const {
+const auto Field::end() const {
     return cells.end();
 }
 
@@ -280,7 +264,7 @@ const Snapshots::FieldSnapshot& Field::SaveField(
 ) {
     field_snapshot = Snapshots::FieldSnapshot(
             std::move(name), creation_date,
-            cells, enemies, rows, columns,
+            cells, npcs, rows, columns,
             cell_size, player
     );
     return field_snapshot.value();
@@ -288,7 +272,7 @@ const Snapshots::FieldSnapshot& Field::SaveField(
 
 void Field::RestoreField(const Snapshots::FieldSnapshot& restore_snapshot) noexcept {
     cells = restore_snapshot.Cells();
-    enemies = restore_snapshot.Enemies();
+    npcs = restore_snapshot.NPCs();
 
     rows = restore_snapshot.Rows();
     columns = restore_snapshot.Columns();

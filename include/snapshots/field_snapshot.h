@@ -1,15 +1,14 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-#include "snapshot.h"
-#include "../common.h"
-#include "../logging/notifier.h"
-#include "../lib/my_container.hpp"
-#include "../model/cell.h"
-#include "../game_objects/enemy.hpp"
-#include "../lib/raii_file.hpp"
-#include "../game_objects/behavior_types.hpp"
+#include <snapshots/snapshot.h>
+#include <common.h>
+#include <logging/notifier.h>
+#include <model/cell.h>
+#include <game_objects/npc.h>
+#include <lib/raii_file.hpp>
 
 
 namespace Snapshots {
@@ -17,17 +16,17 @@ namespace Snapshots {
     class FieldSnapshot : public ISnapshot {
     public:
         FieldSnapshot(std::string name, Common::Date creation_date,
-                      Lib::Container<Lib::Container<Model::Cell>> cells_,
-                      Lib::Container<std::shared_ptr<GameObject::IEnemy>> enemies_,
-                      int rows_, int columns_, int cell_size_, GameObject::Player player_);
+                      std::vector<std::vector<Model::Cell>> cells,
+                      std::vector<std::shared_ptr<GameObject::NPC>> npcs,
+                      int rows, int columns, int cell_size, GameObject::Player player);
 
 
-        const Lib::Container<
-                Lib::Container<Model::Cell>
+        const std::vector<
+                std::vector<Model::Cell>
                 >& Cells() const;
-        const Lib::Container<
-                std::shared_ptr<GameObject::IEnemy>
-                >& Enemies() const;
+        const std::vector<
+                std::shared_ptr<GameObject::NPC>
+                >& NPCs() const;
 
         int Rows() const;
         int Columns() const;
@@ -38,8 +37,8 @@ namespace Snapshots {
         void WriteSnapshot(Lib::OutRFile& out) const noexcept;
 
     private:
-        Lib::Container<Lib::Container<Model::Cell>> cells{};
-        Lib::Container<std::shared_ptr<GameObject::IEnemy>> enemies{};
+        std::vector<std::vector<Model::Cell>> cells{};
+        std::vector<std::shared_ptr<GameObject::NPC>> npcs{};
 
         int rows;
         int columns;
@@ -70,20 +69,21 @@ namespace Snapshots {
         GameObject::Player player;
         player.Read(in);
 
-        auto cells = Lib::Read<Lib::Container<Lib::Container<Model::Cell>>>(in);
+        auto cells = Lib::Read<std::vector<std::vector<Model::Cell>>>(in);
 
-        int enemies_amount = Lib::Read<int>(in);
-        if (enemies_amount < 0) {
+        int npcs_amount = Lib::Read<int>(in);
+        if (npcs_amount < 0) {
             throw Lib::SerializeReadError("enemies amount cannot be negative");
         }
 
-        Lib::Container<std::shared_ptr<GameObject::IEnemy>> enemies;
-        for (int i = 0; i < enemies_amount; ++i) {
-            enemies.PushBack(GameObject::ReadEnemy(in));
+        std::vector<std::shared_ptr<GameObject::NPC>> npcs;
+        for (int i = 0; i < npcs_amount; ++i) {
+            throw std::logic_error("Not implemented");
+            // npcs.PushBack(GameObject::ReadEnemy(in));
         }
 
         return FieldSnapshot(std::move(name), creation_date,
-                             std::move(cells), std::move(enemies),
+                             std::move(cells), std::move(npcs),
                              rows, columns, cell_size, std::move(player));
     }
 

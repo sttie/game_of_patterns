@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-#include "renderer.h"
-#include "../model/field.h"
+#include <graphics/renderer.h>
+#include <model/field.h>
 
 
 namespace Graphics {

@@ -3,9 +3,10 @@
 #include <memory>
 #include <string>
 
-#include "elements_strategies.h"
-#include "../lib/serialize.hpp"
-#include "../common.h"
+#include <game_objects/player.h>
+#include <model/elements_strategies.h>
+#include <lib/serialize.hpp>
+#include <common.h>
 
 
 namespace Model {
@@ -35,7 +36,7 @@ namespace Model {
         void SetStrategy(std::shared_ptr<Strategies::IStrategy> strategy_);
         void SetType(CellType type_);
         void SetPos(Common::Position pos_);
-        void ApplyStrategy(int &x, int &y, int &scores, int &lives);
+        void ApplyStrategy(GameObject::Player& player);
 
         bool WithStrategy() const;
         CellType Type() const;

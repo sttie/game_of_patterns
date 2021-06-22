@@ -7,10 +7,14 @@ namespace Common {
 
     class Position : public Lib::ISerializable {
     public:
-        Position(int x_ = 0, int y_ = 0) : x(x_), y(y_) { }
+        Position(int x = 0, int y = 0) : x(x), y(y) { }
 
         bool operator==(const Position& b) const {
             return x == b.x && y == b.y;
+        }
+
+        bool IsOutOfBounds(int xbound, int ybound) const {
+            return x < 0 || x >= xbound || y < 0 || y >= ybound;
         }
 
         void Write(Lib::OutRFile& out) const override {

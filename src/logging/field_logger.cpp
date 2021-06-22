@@ -1,4 +1,4 @@
-#include "../../include/logging/field_logger.h"
+#include <logging/field_logger.h>
 #include <chrono>
 #include <string>
 

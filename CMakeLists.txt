@@ -9,38 +9,35 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../)
 
-include_directories(include)
-include_directories(include/graphics)
-include_directories(include/lib)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+file(GLOB INCLUDE_FILES
+        include/commands/*.h include/commands/*.hpp
+        include/controller/*.h include/controller/*.hpp
+        include/game_objects/*.h include/game_objects/*.hpp
+        include/graphics/*.h include/graphics/*.hpp
+        include/lib/*.h include/lib/*.hpp
+        include/logging/*.h include/logging/*.hpp
+        include/model/*.h include/model/*.hpp
+        include/snapshots/*.h include/snapshots/*.hpp
+)
+
+file(GLOB SOURCE_FILES
+        src/commands/*.cpp
+        src/controller/*.cpp
+        src/game_objects/*.cpp
+        src/graphics/*.cpp
+        src/lib/*.cpp
+        src/logging/*.cpp
+        src/model/*.cpp
+        src/snapshots/*.cpp
+        main.cpp
+)
 
 add_executable(game_of_patterns
-        include/graphics/renderer.h
-        include/model/cell.h
-        include/model/field.h
-        include/controller/field_controller.h
-        include/lib/my_container.hpp
-        include/logging/stream_logger.hpp
-        include/logging/field_logger.h
-        include/commands/command.h
-        include/commands/moves.hpp
-        src/graphics/renderer.cpp
-        src/model/cell.cpp
-        src/controller/field_controller.cpp
-        src/model/field.cpp
-        src/logging/field_logger.cpp
-        main.cpp src/graphics/draw.cpp
-        include/graphics/draw.h include/game_objects/player.h
-        src/game_objects/player.cpp include/model/elements_strategies.h
-        src/model/elements_strategies.cpp include/lib/raii_file.hpp
-        include/logging/notifier.h include/logging/listener.h
-        src/logging/notifier.cpp include/logging/file_logger.hpp
-        include/commands/moves.hpp include/game_objects/enemy.hpp
-        include/game_objects/behavior_types.hpp
-        include/game_objects/buffs.h include/controller/states.h
-        src/controller/states.cpp include/controller/states_interface.h
-        include/common.h include/snapshots/snapshot.h include/snapshots/field_snapshot.h
-        include/graphics/file_dialog.h include/lib/serialize.hpp src/snapshots/field_snapshot.cpp
-        include/lib/type_checkers.h)
+        ${INCLUDE_FILES}
+        ${SOURCE_FILES}
+)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)

@@ -1,4 +1,4 @@
-#include "../../include/logging/notifier.h"
+#include <logging/notifier.h>
 
 
 void Logging::Notifier::Subscribe(ListenerPtr new_listener) {

@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "../lib/raii_file.hpp"
-#include "base_logger.h"
+#include <lib/raii_file.hpp>
+#include <logging/base_logger.h>
 
 
 namespace Logging {

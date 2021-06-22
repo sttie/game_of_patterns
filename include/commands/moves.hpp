@@ -1,7 +1,7 @@
 #pragma once
 
-#include "command.h"
-#include "../model/field.h"
+#include <commands/command.h>
+#include <model/field.h>
 
 namespace Commands {
 

@@ -5,9 +5,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "my_container.hpp"
-#include "raii_file.hpp"
-#include "type_checkers.h"
+#include <lib/raii_file.hpp>
+#include <lib/type_checkers.h>
 
 
 namespace Lib {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../model/field.h"
+#include <model/field.h>
 
 
 namespace States {

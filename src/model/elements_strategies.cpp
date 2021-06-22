@@ -1,17 +1,19 @@
-#include "../../include/model/elements_strategies.h"
+#include <model/elements_strategies.h>
+#include <game_objects/player.h>
 #include <stdexcept>
 
 using namespace std;
 using namespace Strategies;
 
 
-ScoresUp::ScoresUp(int scores_amount_)
+ScoresUp::ScoresUp(int scores_amount)
     : IStrategy(StrategyType::SCORES_UP)
-    , scores_amount(scores_amount_) { }
+    , scores_amount(scores_amount)
+{
+}
 
-void ScoresUp::ApplyStrategy(int& x, int& y,
-                             int& scores, int& lives) const {
-    scores += scores_amount;
+void ScoresUp::ApplyStrategy(GameObject::Player& player) const {
+    player.TakeScores(scores_amount);
 }
 
 void ScoresUp::Write(Lib::OutRFile& out) const {
@@ -25,11 +27,10 @@ const Lib::ISerializable& ScoresUp::Read(Lib::InRFile& in) {
 
 LivesUp::LivesUp(int lives_amount_)
     : IStrategy(StrategyType::LIVES_UP)
-    , lives_amount(lives_amount_) { }
+    , lives_amount(lives_amount) { }
 
-void LivesUp::ApplyStrategy(int& x, int& y,
-                            int& scores, int& lives) const {
-    lives += lives_amount;
+void LivesUp::ApplyStrategy(GameObject::Player& player) const {
+    player.TakeHeal(lives_amount);
 }
 
 void LivesUp::Write(Lib::OutRFile& out) const {
@@ -41,16 +42,14 @@ const Lib::ISerializable& LivesUp::Read(Lib::InRFile& in) {
 }
 
 
-Teleport::Teleport(int to_x_, int to_y_)
+Teleport::Teleport(int to_x, int to_y)
     : IStrategy(StrategyType::PORTAL)
-    , to_x(to_x_), to_y(to_y_)
+    , to_x(to_x), to_y(to_y)
 {
 }
 
-void Teleport::ApplyStrategy(int& x, int& y,
-                             int& scores, int& lives) const {
-    x = to_x;
-    y = to_y;
+void Teleport::ApplyStrategy(GameObject::Player& player) const {
+    player.SetPosition(to_x, to_y);
 }
 
 void Teleport::Write(Lib::OutRFile& out) const {

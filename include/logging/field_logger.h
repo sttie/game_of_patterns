@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "listener.h"
-#include "../model/field.h"
-#include "base_logger.h"
+#include <logging/listener.h>
+#include <model/field.h>
+#include <logging/base_logger.h>
 
 namespace Logging {
 

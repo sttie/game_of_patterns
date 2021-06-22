@@ -1,8 +1,8 @@
-#include "../../include/model/field.h"
-#include "../../include/graphics/draw.h"
-#include "../../include/controller/states.h"
-#include "../../include/controller/field_controller.h"
-#include "../../include/graphics/file_dialog.h"
+#include <model/field.h>
+#include <graphics/draw.h>
+#include <controller/states.h>
+#include <controller/field_controller.h>
+#include <graphics/file_dialog.h>
 
 #include <iostream>
 

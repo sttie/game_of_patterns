@@ -3,14 +3,14 @@
 #include <cstdint>
 #include <tuple>
 #include <optional>
+#include <vector>
 
-#include "../game_objects/enemy.hpp"
-#include "../lib/my_container.hpp"
-#include "cell.h"
-#include "../game_objects/player.h"
-#include "../logging/notifier.h"
-#include "../common.h"
-#include "../snapshots/field_snapshot.h"
+#include <game_objects/npc.h>
+#include <model/cell.h>
+#include <game_objects/player.h>
+#include <logging/notifier.h>
+#include <common.h>
+#include <snapshots/field_snapshot.h>
 
 
 namespace Model {
@@ -30,16 +30,16 @@ namespace Model {
         static Field& GetField();
         static void ClearField();
 
-        Field(const Field& other_field);
-        Field(Field&& other_field) noexcept;
+        Field(const Field& other_field) = delete;
+        Field& operator=(const Field& other_field) = delete;
 
-        Field& operator=(const Field& other_field);
+        Field(Field&& other_field) noexcept;
         Field& operator=(Field&& other_field) noexcept;
 
-        Lib::Container<Cell> &operator[](int index);
-        const Lib::Container<Cell> &operator[](int index) const;
+        std::vector<Cell>& operator[](int index);
+        const std::vector<Cell>& operator[](int index) const;
 
-        bool IsEnemy(int x, int y) const;
+        bool IsNPC(int x, int y) const;
         bool IsEnter(int x, int y) const;
         bool IsExit(int x, int y) const;
         bool IsObstacle(int x, int y) const;
@@ -57,30 +57,17 @@ namespace Model {
         int PlayerY() const;
         int PlayerLives() const;
         int PlayerScores() const;
-        void MovePlayer(Move direction);
+        void MovePlayer(const Move& direction);
 
         void AddListener(Logging::Notifier::ListenerPtr new_listener);
 
-        Lib::Container<Cell>* begin();
-        Lib::Container<Cell>* end();
-        const Lib::Container<Cell>* begin() const;
-        const Lib::Container<Cell>* end() const;
+        auto begin();
+        auto end();
+        const auto begin() const;
+        const auto end() const;
 
-        template<typename Moving, typename Attacking>
-        void AddEnemy(std::shared_ptr<
-                GameObject::StandardEnemy<Moving, Attacking>
-                > new_enemy) {
-            Lib::Container<Common::Position> obstacles;
-            for (int i = 0; i < rows; ++i) {
-                for (int j = 0; j < columns; ++j) {
-                    if (IsObstacle(j, i))
-                        obstacles.PushBack({j, i});
-                }
-            }
+        void AddNPC(std::shared_ptr<GameObject::NPC> npc);
 
-            new_enemy->SetMovingBorders({rows, columns}, obstacles);
-            enemies.PushBack(std::move(new_enemy));
-        }
         void UpdateEnemies();
 
         const Snapshots::FieldSnapshot& SaveField(std::string name, Common::Date creation_date);
@@ -96,8 +83,8 @@ namespace Model {
 
         static std::shared_ptr<Field> field;
 
-        Lib::Container<Lib::Container<Cell>> cells{};
-        Lib::Container<std::shared_ptr<GameObject::IEnemy>> enemies{};
+        std::vector<std::vector<Cell>> cells{};
+        std::vector<std::shared_ptr<GameObject::NPC>> npcs{};
 
         int rows;
         int columns;
