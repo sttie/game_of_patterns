@@ -23,6 +23,6 @@ It means that that the core value of this project lies in the code.
 
 ## TODO
 
-- [] Randomly generated map
-- [] Some semblance of AI for NPCs
-- [] Frontend refactoring: new sprites, new fonts, animations, etc.
+- [ ] Randomly generated map
+- [ ] Some semblance of AI for NPCs
+- [ ] Frontend refactoring: new sprites, new fonts, animations, etc.
