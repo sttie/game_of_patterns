@@ -11,7 +11,7 @@ namespace GameObject {
 
     class NPC : public Lib::ISerializable {
     public:
-        explicit NPC(const Common::Position& position);
+        NPC(const Common::Position& position);
         NPC(int x, int y);
 
         // TODO: убрать заглушку
@@ -21,6 +21,7 @@ namespace GameObject {
         virtual void InteractWithPlayer(Player& player) const = 0;
         virtual Common::Position Move() const = 0;
 
+        // const std::string& SpritePath() const;
         int X() const;
         int Y() const;
 

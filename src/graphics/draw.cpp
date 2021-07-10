@@ -1,32 +1,25 @@
-#include "../../include/graphics/draw.h"
+#include <graphics/draw.h>
+#include <graphics/sprites_paths.h>
 
 #include <iostream>
+
 
 using namespace std;
 using namespace Graphics;
 
-Drawer::Drawer(Model::Field& field_ref_,
-               sf::Color outline_color_,
-               const std::string& LIVES_IMG_PATH,
-               const std::string& SCORES_IMG_PATH)
+Drawer::Drawer(Model::Field& field_ref_, sf::Color outline_color_)
     : field_ref(field_ref_)
     , window(sf::VideoMode(field_ref.CellSize() * field_ref.Rows(),
                            field_ref.CellSize() * field_ref.Columns()),
                            "Game field")
     , renderer(window)
     , outline_color(outline_color_)
+    , hero_draw_info(PLAYER_SPRITE_PATH, 0.11, 0.135)
+    , enemy_draw_info(WANDERING_ENEMY_PATH, 0.11, 0.105)
+    , lives_draw_info(HEART_SPRITE_PATH, 0.155, 0.155)
+    , score_draw_info(SCORE_SPRITE_PATH, 0.025, 0.025)
+    , portal_draw_info(PORTAL_SPRITE_PATH, 0.12, 0.123)
 {
-    InitSprite(LIVES_IMG_PATH, heart_texture, heart_sprite, 0.085, 0.12);
-    InitSprite(SCORES_IMG_PATH, score_texture, score_sprite, 0.094, 0.12);
-}
-
-
-void Drawer::InitSprite(const std::string& texture_path,
-                        sf::Texture& texture, sf::Sprite& sprite,
-                        float xscale, float yscale) {
-    texture.loadFromFile(texture_path);
-    sprite.setTexture(texture);
-    sprite.setScale(xscale, yscale);
 }
 
 void Drawer::Update() {
@@ -40,61 +33,48 @@ void Drawer::Close() {
 }
 
 void Drawer::RenderField() {
-    renderer.DrawGrid(field_ref.Rows(),
-                      field_ref.Columns(),
-                      field_ref.CellSize(),
-                      outline_color);
+    renderer.DrawGrid(field_ref.Rows(), field_ref.Columns(),
+                      field_ref.CellSize(), outline_color);
 
-    for (size_t i = 0; i < field_ref.Rows(); i++) {
-        for (size_t j = 0; j < field_ref.Columns(); j++ ) {
+    for (size_t i = 0; i < field_ref.Rows(); i++)
+        for (size_t j = 0; j < field_ref.Columns(); j++ )
             RenderCell(i, j);
-        }
-    }
-
     RenderPlayer();
 }
 
 void Drawer::RenderCell(int x, int y) {
+    size_t cell_size = field_ref.CellSize();
+    
     if (field_ref.IsObstacle(x, y)) {
         renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Black);
     }
     else if (field_ref.IsExit(x, y)) {
         renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Blue);
     }
-    else if (field_ref.IsEnter(x, y)) {
-        renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Green);
-    }
     else if (field_ref.IsLivesUp(x, y)) {
-        renderer.DrawSprite(heart_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
+        renderer.DrawSprite(lives_draw_info.sprite, 
+                            x * cell_size + cell_size / 3.9,
+                            y * cell_size + cell_size / 3.9);
     }
     else if (field_ref.IsScoresUp(x, y)) {
-        renderer.DrawSprite(score_sprite, x * field_ref.CellSize(), y * field_ref.CellSize());
+        renderer.DrawSprite(score_draw_info.sprite,
+                            x * cell_size + cell_size / 3.7,
+                            y * cell_size + cell_size / 5.2);
     }
     else if (field_ref.IsPortal(x, y)) {
-        renderer.ColorCell(x, y, field_ref.CellSize(), sf::Color::Magenta);
+        renderer.DrawSprite(portal_draw_info.sprite, x * cell_size, y * cell_size);
     }
 
     if (field_ref.IsNPC(x, y)) {
-        size_t cell_size = field_ref.CellSize();
-        sf::CircleShape circle(cell_size / 2 - 10);
-        circle.setFillColor(sf::Color::Red);
-        circle.setOutlineColor(sf::Color(225, 225, 0, 255));
-        circle.setOutlineThickness(5);
-        circle.setPosition(cell_size * x + 10, cell_size * y + 10);
-
-        window.draw(circle);
+        renderer.DrawSprite(enemy_draw_info.sprite,
+                            x * cell_size + cell_size / 5,
+                            y * cell_size + cell_size / 12);
     }
 }
 
 void Drawer::RenderPlayer() {
     size_t cell_size = field_ref.CellSize();
-    sf::CircleShape circle(cell_size / 2 - 10);
-    circle.setFillColor(sf::Color::Black);
-    circle.setOutlineColor(sf::Color(224, 160, 37, 255));
-    circle.setOutlineThickness(5);
-    circle.setPosition(cell_size * field_ref.PlayerX() + 10, cell_size * field_ref.PlayerY() + 10);
-
-    window.draw(circle);
+    renderer.DrawSprite(hero_draw_info.sprite, cell_size * field_ref.PlayerX(), cell_size * field_ref.PlayerY());
 }
 
 bool Drawer::IsOpen() const {

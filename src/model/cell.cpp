@@ -50,8 +50,6 @@ void Cell::ApplyStrategy(GameObject::Player& player) {
 
 std::string Cell::StringType() const {
     switch (type) {
-        case CellType::ENTER:
-            return "Enter";
         case CellType::EXIT:
             return "Exit";
         case CellType::OBSTACLE:

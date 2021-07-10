@@ -16,7 +16,6 @@ namespace Model {
         enum class CellType {
             OBSTACLE,
             EXIT,
-            ENTER,
             EMPTY,
             LIVES_UP,
             SCORES_UP,

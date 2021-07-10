@@ -16,7 +16,6 @@ constexpr int ROWS = 10;
 constexpr int COLUMNS = 10;
 constexpr int SIZE = 80;
 
-
 int main(int argc, char* argv[]) {
     using namespace Lib;
     using namespace Logging;
@@ -31,9 +30,7 @@ int main(int argc, char* argv[]) {
     field_model.AddNPC(std::make_shared<WanderingEnemy>(Common::Position{9, 9}, 1));
     field_model.AddNPC(std::make_shared<WanderingEnemy>(Common::Position{2, 0}, 1));
 
-    auto field_view = std::make_shared<Drawer>(field_model, sf::Color::Black,
-                                          "resources/heart.png",
-                                          "resources/score_coin.png");
+    auto field_view = std::make_shared<Drawer>(field_model, sf::Color::Black);
 
     // Listeners
     auto logger = std::make_shared<FieldLogger>(

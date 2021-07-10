@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 using namespace Logging;
@@ -32,7 +33,6 @@ void Field::FillField() {
     using namespace Strategies;
     using CellType = Cell::CellType;
 
-    cells[9][0] = Cell({0, 9}, CellType::ENTER);
     cells[0][9] = Cell({9, 0}, CellType::EXIT);
 
     for (int i = 1; i <= 2; i++) {
@@ -93,10 +93,6 @@ bool Field::IsNPC(int x, int y) const {
    return !none_of(npcs.begin(), npcs.end(), [x, y](const auto& npc_ptr){
        return npc_ptr->X() == x && npc_ptr->Y() == y;
    });
-}
-
-bool Field::IsEnter(int x, int y) const {
-    return cells[y][x].Type() == Cell::CellType::ENTER;
 }
 
 bool Field::IsExit(int x, int y) const {
